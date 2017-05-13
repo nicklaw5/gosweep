@@ -2,16 +2,17 @@
 #
 # The script does automatic checking on a Go package and its sub-packages, including:
 #
-# 1. gofmt
-# 2. goimports
-# 3. golint
-# 4. go vet
-# 5. ineffassign
-# 6. race detector
-# 7. test coverage
-# 8. gocyclo
-# 9. misspell
-#
+# 1. test
+# 2. gofmt
+# 3. goimports
+# 4. golint
+# 5. go vet
+# 6. ineffassign
+# 7. race detector
+# 8. misspell (.go files)
+# 9. misspell (.txt .md .rst files)
+# 10. test coverage
+# 11. goveralls
 
 set -e
 
@@ -19,9 +20,8 @@ go build $(go list ./... | grep -v '/vendor/')
 
 echo 'mode: count' > profile.cov
 
-complexity="${GOCYCLO_COMPLEXITY:-5}"
 locale="${MISSPELL_LOCALE:-US}"
-max_steps=12
+max_steps=11
 
 for pkg in $(go list ./... | grep -v '/vendor/');
 do
@@ -60,28 +60,24 @@ do
     ineffassign -n $dir | tee /dev/stderr
 
     # 7. race conditions
-    echo "skipped go test race $pkg ... (7/$max_steps)"
-    #env GORACE="halt_on_error=1" go test -short -race $pkg
+    echo "race detector $pkg ... (7/$max_steps)"
+    env GORACE="halt_on_error=1" go test -short -race $pkg
 
 done
 
-# 8. gocyclo
-echo "gocyclo (8/$max_steps)"
-find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 gocyclo -over $complexity {}
-
-# 9. misspell over .go files
-echo "misspell *.go (9/$max_steps)"
+# 8. misspell over .go files
+echo "misspell *.go (8/$max_steps)"
 find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 misspell -error -source go {}
 
-# 10. misspell over .txt .md .rst files
-echo "misspell text files... (10/$max_steps)"
+# 9. misspell over .txt .md .rst files
+echo "misspell text files... (9/$max_steps)"
 find . -type f -not -path './vendor/*' \( -name '*.md' -o -name '*.txt' -o -name '*.rst' \) | xargs -I {} misspell -error -source text {}
 
-# 11. test coverage
-echo "go tool cover (11/$max_steps)"
+# 10. test coverage
+echo "go tool cover (10/$max_steps)"
 go tool cover -func profile.cov
 
-# 12. goveralls
+# 11. goveralls
 if [ -n "${CI_SERVICE+1}" ]; then
     echo "goveralls with ${CI_SERVICE}"
     if [ -n "${COVERALLS_TOKEN+1}" ]; then
@@ -91,4 +87,4 @@ if [ -n "${CI_SERVICE+1}" ]; then
     fi
 fi
 
-echo "done. (12/$max_steps)"
+echo "done. (11/$max_steps)"

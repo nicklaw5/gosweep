@@ -2,37 +2,29 @@
 
 This script performs the build, test and automatic checking of a Go package and its sub-packages using:
 
-1. [gofmt][gofmt]
-2. [goimports][goimports]
-3. [golint][golint]
-4. [go vet][go_vet]
-5. [ineffassign][ineffassign]
-6. [race detector][race_detector]
-7. [test coverage][test_coverage] on package and its sub-packages, `/vendor` directories excluded
-8. [goveralls][goveralls]
-9. [gocyclo][gocyclo]
-10. [misspell][misspell]
-
-Migrated from my [Gist](https://gist.github.com/hailiang/0f22736320abe6be71ce).
-
+- [gofmt][gofmt]
+- [goimports][goimports]
+- [golint][golint]
+- [go vet][go_vet]
+- [ineffassign][ineffassign]
+- [race detector][race_detector]
+- [test coverage][test_coverage] on package and its sub-packages, `/vendor` directories excluded
+- [goveralls][goveralls]
+- [misspell][misspell]
 
 ## Dependencies
 
 To setup all the dependencies need to run the script do:
 ```
 $ go get -v github.com/client9/misspell/cmd/misspell
-$ go get -v github.com/fzipp/gocyclo
 $ go get -v github.com/h12w/gosweep
 $ go get -v github.com/mattn/goveralls
 $ go get -v github.com/Masterminds/glide
 ```
 
-
 ## Environment variables
 
-- **GOCYCLO_COMPLEXITY**: maximum allowed function complexity threshold (default: `5`).
 - **MISSPELL_LOCALE**: English locale (default: `US`).
-
 
 ## Continuous Integration
 
@@ -45,7 +37,6 @@ language: go
 cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
-    - ${GOPATH}/src/github.com/fzipp
     - ${GOPATH}/src/github.com/h12w
     - ${GOPATH}/src/github.com/Masterminds
     - ${GOPATH}/src/github.com/mattn
@@ -61,7 +52,6 @@ env:
 
 install:
   - go get -v github.com/client9/misspell/cmd/misspell
-  - go get -v github.com/fzipp/gocyclo
   - go get -v github.com/h12w/gosweep
   - go get -v github.com/mattn/goveralls
   - go get -v github.com/Masterminds/glide
@@ -73,7 +63,6 @@ script:
 
 
 [go_vet]:	http://golang.org/cmd/vet	"go vet"
-[gocyclo]:  https://github.com/fzipp/gocyclo  "gocyclo"
 [gofmt]:	http://golang.org/cmd/gofmt/	"gofmt"
 [goimports]:	https://godoc.org/golang.org/x/tools/cmd/goimports	"golang.org/x/tools/cmd/goimports"
 [golint]:	https://github.com/golang/lint	"golang/lint"
