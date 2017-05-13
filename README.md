@@ -16,8 +16,11 @@ This script performs the build, test and automatic checking of a Go package and 
 
 To setup all the dependencies need to run the script do:
 ```
+$ go get -v golang.org/x/tools/cmd/goimports
+$ go get -v github.com/golang/lint/golint
+$ go get -v github.com/gordonklaus/ineffassign
 $ go get -v github.com/client9/misspell/cmd/misspell
-$ go get -v github.com/h12w/gosweep
+$ go get -v github.com/nicklaw5/gosweep
 $ go get -v github.com/mattn/goveralls
 $ go get -v github.com/Masterminds/glide
 ```
@@ -37,7 +40,7 @@ language: go
 cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
-    - ${GOPATH}/src/github.com/h12w
+    - ${GOPATH}/src/github.com/nicklaw5
     - ${GOPATH}/src/github.com/Masterminds
     - ${GOPATH}/src/github.com/mattn
 go:
@@ -51,14 +54,17 @@ env:
     CI_SERVICE=travis-ci
 
 install:
+  - go get -v golang.org/x/tools/cmd/goimports
+  - go get -v github.com/golang/lint/golint
+  - go get -v github.com/gordonklaus/ineffassign
   - go get -v github.com/client9/misspell/cmd/misspell
-  - go get -v github.com/h12w/gosweep
+  - go get -v github.com/nicklaw5/gosweep
   - go get -v github.com/mattn/goveralls
   - go get -v github.com/Masterminds/glide
   - glide install
 
 script:
-  - bash ${GOPATH}/src/github.com/h12w/gosweep/gosweep.sh
+  - bash ${GOPATH}/src/github.com/nicklaw5/gosweep/gosweep.sh
 ```
 
 
